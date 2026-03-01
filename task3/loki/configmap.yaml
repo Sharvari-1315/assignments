@@ -35,7 +35,7 @@ data:
     [OUTPUT]
         Name   loki
         Match  *
-        Host   65.0.117.83
+        Host   your-ec2-instance-ip
         Port   3100
         Labels job=fluentbit
         Label_keys  $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name']
