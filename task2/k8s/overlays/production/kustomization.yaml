@@ -8,7 +8,7 @@ resources:
 
 patches:
 - path: patch-replicas.yaml
-- path: patch_service.yaml
+- path: patch-service.yaml
 
 images:
 - name: devsharvari/fastapi-app
