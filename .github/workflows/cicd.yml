@@ -108,15 +108,16 @@ jobs:
         run: |
           curl -s https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh | bash
           sudo mv kustomize /usr/local/bin/
+          
+      - name: Pull latest changes
+        run: |
+          git pull origin main --rebase
 
       - name: Update production overlay
         run: |
           cd task2/k8s/overlays/production
           kustomize edit set image $IMAGE_NAME=$IMAGE_NAME:${{ github.sha }}
 
-      - name: Pull latest changes
-        run: |
-          git pull origin main --rebase
 
       - name: Commit production change
         run: |
