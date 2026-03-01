@@ -10,7 +10,7 @@ All external traffic enters through a single URL `http://dodo-app.local`. Nginx 
 
 ## Architecture Diagram
 
-![Architecture](docs/architecture.png)
+![Architecture](architecture.png)
 
 ---
 
