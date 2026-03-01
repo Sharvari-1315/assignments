@@ -1,0 +1,119 @@
+groups:
+- name: pod-alerts
+  rules:
+
+  # Pod is down/not running
+  - alert: PodNotRunning
+    expr: kube_pod_status_phase{phase!="Running"} == 1
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Pod {{ $labels.pod }} is not running"
+      description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is in {{ $labels.phase }} state."
+
+  # Pod restarting too many times
+  - alert: PodCrashLooping
+    expr: rate(kube_pod_container_status_restarts_total[5m]) * 300 > 1
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Pod {{ $labels.pod }} is crash looping"
+      description: "Pod {{ $labels.pod }} is restarting frequently."
+
+  # Pod not ready
+  - alert: PodNotReady
+    expr: kube_pod_status_ready{condition="true"} == 0
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Pod {{ $labels.pod }} is not ready"
+      description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is not ready."
+
+  # Pod OOMKilled (out of memory)
+  - alert: PodOOMKilled
+    expr: kube_pod_container_status_last_terminated_reason{reason="OOMKilled"} == 1
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Pod {{ $labels.pod }} OOM Killed"
+      description: "Pod {{ $labels.pod }} was killed due to out of memory."
+
+  # Pod high CPU usage
+  - alert: PodHighCPU
+    expr: rate(container_cpu_usage_seconds_total{container!=""}[5m]) * 100 > 80
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Pod {{ $labels.pod }} high CPU"
+      description: "Pod {{ $labels.pod }} CPU usage above 80%."
+
+  # Pod high memory usage
+  - alert: PodHighMemory
+    expr: (container_memory_usage_bytes{container!=""} / container_spec_memory_limit_bytes{container!=""}) * 100 > 85
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Pod {{ $labels.pod }} high memory"
+      description: "Pod {{ $labels.pod }} memory usage above 85%."
+
+  # Pod pending too long
+  - alert: PodStuckPending
+    expr: kube_pod_status_phase{phase="Pending"} == 1
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Pod {{ $labels.pod }} stuck in Pending"
+      description: "Pod {{ $labels.pod }} has been pending for more than 5 minutes."
+
+  # Container waiting (ImagePullBackOff, CrashLoopBackOff)
+  - alert: ContainerWaiting
+    expr: kube_pod_container_status_waiting_reason{reason=~"CrashLoopBackOff|ImagePullBackOff|ErrImagePull"} == 1
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Container {{ $labels.container }} is waiting"
+      description: "Container {{ $labels.container }} in pod {{ $labels.pod }} is in {{ $labels.reason }} state."
+- name: node-alerts
+  rules:
+  - alert: HighCPUUsage
+    expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "High CPU usage detected"
+      description: "CPU usage above 80% for more than 2 minutes."
+  - alert: HighMemoryUsage
+    expr: ((node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes) * 100 > 85
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High memory usage detected"
+      description: "Memory usage above 85%."
+- name: app-alerts
+  rules:
+  - alert: HighRequestLatency
+    expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High API latency"
+      description: "p95 latency greater than 1 second."
+  - alert: HighErrorRate
+    expr: rate(http_requests_total{status=~"5.."}[2m]) > 0.05
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "High 5xx error rate"
+      description: "Application returning too many 5xx errors."

@@ -1,0 +1,16 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: pagerduty
+  group_by: ['alertname', 'pod', 'namespace']
+  group_wait: 10s
+  group_interval: 30s
+  repeat_interval: 60s
+
+receivers:
+  - name: pagerduty
+    pagerduty_configs:
+      - routing_key: "a57eb9f4b7174a08c08d576ef380f06a"
+        severity: '{{ .CommonLabels.severity }}'
+        description: '{{ .CommonAnnotations.summary }}'
