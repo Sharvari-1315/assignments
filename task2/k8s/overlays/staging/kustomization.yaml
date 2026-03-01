@@ -12,4 +12,4 @@ patches:
 images:
 - name: devsharvari/fastapi-app
   newName: devsharvari/fastapi-app
-  newTag: 6a986f32deba77f3495447afe270cceb00b890bd
+  newTag: e3ea9dfa1b2ccc9412f6e1ddc7c719867e8180b6
