@@ -4,11 +4,12 @@ kind: Kustomization
 namespace: staging
 
 resources:
-  - ../../base
+- ../../base
 
 patches:
-  - path: patch-replicas.yaml
+- path: patch-replicas.yaml
 
 images:
-  - name: devsharvari/fastapi-app
-    newTag: latest
+- name: devsharvari/fastapi-app
+  newName: devsharvari/fastapi-app
+  newTag: ae6c16db296d51381862a74662a392baf6f3ee2e
