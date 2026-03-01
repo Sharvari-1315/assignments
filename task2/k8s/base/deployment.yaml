@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: fastapi
-        image: sharu/fastapi-app:latest
+        image: devsharvari/fastapi-app:latest
         ports:
         - containerPort: 8000
