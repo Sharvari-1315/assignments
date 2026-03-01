@@ -1,10 +1,6 @@
 from fastapi import FastAPI
-from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI()
-
-# 🔹 DevOps monitoring one-liner
-Instrumentator().instrument(app).expose(app)
 
 todos = {}
 next_id = 1
