@@ -4,11 +4,12 @@ kind: Kustomization
 namespace: production
 
 resources:
-  - ../../base
+- ../../base
 
 patches:
-  - path: patch-replicas.yaml
+- path: patch-replicas.yaml
 
 images:
-  - name: devsharvari/fastapi-app
-    newTag: latest
+- name: devsharvari/fastapi-app
+  newName: devsharvari/fastapi-app
+  newTag: bf3fc3698466a66aadbe1a4bd371a1fb83b55504
