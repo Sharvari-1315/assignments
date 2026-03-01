@@ -10,5 +10,5 @@ patches:
   - path: patch-replicas.yaml
 
 images:
-  - name: sharu/fastapi-app
+  - name: devsharvari/fastapi-app
     newTag: latest
