@@ -92,6 +92,6 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add task2/k8s/overlays/staging/kustomization.yaml
+          git add task2/k8s/overlays/staging/kustomization.yml
           git commit -m "Update image to $IMAGE_NAME:${{ github.sha }}" || echo "No changes to commit"
           git push
